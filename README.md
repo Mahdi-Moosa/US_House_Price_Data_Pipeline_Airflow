@@ -11,7 +11,7 @@ This Airflow orchasteration generates a Data Warehouse to perform analytics on U
 4. [Zillow](https://www.zillow.com/research/data/) housing index.
 5. Zip code data from [GeoNames](http://download.geonames.org/export/zip/).
 
-*Additional data (on census tract to zipcode mapping) comes from [U.S. Census Bureau](https://www.census.gov/) and [U.S. Department of
+*Additional data (for census tract to zipcode mapping) comes from [U.S. Census Bureau](https://www.census.gov/) and [U.S. Department of
 Housing and Urban Development](https://www.hud.gov/).*
 
 ## Steps
