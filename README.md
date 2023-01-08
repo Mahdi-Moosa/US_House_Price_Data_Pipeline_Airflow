@@ -30,3 +30,8 @@ Files/ folders in this repo:
 ## Graph view of the Airflow Tasks:
 
 ![My Image](images/Airflow_Scheme.png)
+
+## How to run the the pipeline:
+1. Install Apache Airflow. Official documentation: [*link*](https://airflow.apache.org/docs/apache-airflow/2.2.1/start/docker.html). My experiences with  installing Airflow in [Windows 10 Pro](https://mahdimoosa.substack.com/p/airflow-in-windows-10-pro-docker). 
+2. Run airflow container.
+3. Trigger the DAG.
