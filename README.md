@@ -18,7 +18,7 @@ This Airflow orchasteration generates a Data Warehouse to perform analytics on U
 * Step 4: Prepare zip code dimension table.
 * Step 5: Validate the master house price table & zipcode table for data integrity.
 
-**Notes: At present, the airflow orchestration saves data in pre-specified local directories. This can easily be reconfigured to store data in Amazon S3 bucket and/or Amazon Redshfit. Please see: https://github.com/Mahdi-Moosa/US_Housing_Price_ETL
+*Notes: At present, the airflow orchestration saves data in pre-specified local directories. This can easily be reconfigured to store data in Amazon S3 bucket and/or Amazon Redshfit. Please see: https://github.com/Mahdi-Moosa/US_Housing_Price_ETL*
 
 Files/ folders in this repo: 
 * dags: folder contains .py script to run the Apache Airflow DAG.
