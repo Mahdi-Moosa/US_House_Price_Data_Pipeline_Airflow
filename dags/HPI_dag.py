@@ -2,10 +2,10 @@ from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
-import logging, requests, os, time
+import logging, os , time, requests
 import pandas as pd
 from functools import reduce
-from helpers.file_handle import save_pd_to_parquet
+from helpers.functions import save_pd_to_parquet, fetch_data_from_url
 
 default_args = {
     'owner': 'Mahdi Moosa',
@@ -15,15 +15,25 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
     'catchup_by_default': False,
     'email_on_retry': False,
+    'file_presence_check' : True # If you want to replace existing files (i.e., don't want to check for the presence of pre-existing files) set this flag to False. This will apply to all file downloads.
 }
 
 def fetch_data_from_url(*args, **kwargs):
+    """
+    This function fetches files from URL. Input should be provided as task parameters. 
+    Inputs include (as parameters)
+        url: URL to download.
+        file_name: Name of the file to be downloaded from the URL.
+        folder_name: Folder name where downloaded file will be saved. (If file is already present, then download will be skipped).
+    """
+    # import os, logging, time, requests
     url = kwargs["params"]["url"]                   # URL to fetch
     fname = kwargs["params"]["file_name"]           # File name 
     folder_name = kwargs["params"]["folder_name"]   # Destination folder name
+    file_prsence_check = default_args['file_prsence_check']
     fpath = folder_name + '/' + fname
     
-    if os.path.exists(f'{fpath}'):
+    if file_prsence_check and os.path.exists(f'{fpath}'):
         return logging.info(f'File named {fname} already present.')
     
     if not os.path.isdir(folder_name):
@@ -400,14 +410,11 @@ zipcode_table_validity_check = PythonOperator(
     }
 )
 
-# intermiediate_operator1 = DummyOperator(task_id='mid_execution_1',  dag=dag)
-
-# intermiediate_operator2 = DummyOperator(task_id='mid_execution_2',  dag=dag)
-
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
 # Task dependencies
 
+# Tasks to download files
 start_operator >> fhfa_uad_data_download
 start_operator >> tract_20_to_tract_2010
 start_operator >> tract_2_zip
@@ -416,20 +423,25 @@ start_operator >> realtor_data
 start_operator >> redfin_data
 start_operator >> zillow_data
 
+# Tasks to prepare final UAD table.
 tract_2_zip >> uad_table_etl
 fhfa_uad_data_download >> uad_table_etl
 tract_20_to_tract_2010 >> uad_table_etl
 
+# ETL of the final house price table
 uad_table_etl >> hpa_table_lt
 realtor_data >> hpa_table_lt
 redfin_data >> hpa_table_lt
 zillow_data >> hpa_table_lt
 
+# ETL of zip dtable
 zillow_data>> get_zip_table
 zip_details>> get_zip_table
 
+# Data validity check
 hpa_table_lt >> house_price_table_validity_check
 get_zip_table >> zipcode_table_validity_check
 
+# End operator
 house_price_table_validity_check >> end_operator
 zipcode_table_validity_check >> end_operator
