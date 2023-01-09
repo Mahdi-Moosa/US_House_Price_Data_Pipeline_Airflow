@@ -5,7 +5,7 @@ from airflow.operators.python_operator import PythonOperator
 import logging, os , time, requests
 import pandas as pd
 from functools import reduce
-from helpers.functions import save_pd_to_parquet, fetch_data_from_url
+from helpers.functions import save_pd_to_parquet
 
 default_args = {
     'owner': 'Mahdi Moosa',
