@@ -19,7 +19,7 @@ Housing and Urban Development](https://www.hud.gov/).*
 * Step 2: Extract and transform realtor, redfin, zillow & zip code data.
 * Step 3: Merge/ join transformed FHFA appraisal data, realtor data, redfin data and zillow data to prepare master house price dataset.
 * Step 4: Prepare zip code dimension table.
-* Step 5: Validate the master house price table & zipcode table for data integrity.
+* Step 5: Validate the master house price table & zipcode table for data integrity (using custom airflow operator).
 
 *Notes: At present, the airflow orchestration saves data in pre-specified local directories. This can easily be reconfigured to store data in Amazon S3 bucket and/or Amazon Redshfit. Please see: https://github.com/Mahdi-Moosa/US_Housing_Price_ETL*
 
