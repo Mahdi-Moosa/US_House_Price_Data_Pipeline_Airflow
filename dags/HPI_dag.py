@@ -2,10 +2,11 @@ from airflow import DAG
 from datetime import datetime, timedelta
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
+from operators.data_quality import TableDataQualityOperator
+from helpers.functions import save_pd_to_parquet
 import logging, os , time, requests
 import pandas as pd
 from functools import reduce
-from helpers.functions import save_pd_to_parquet
 
 default_args = {
     'owner': 'Mahdi Moosa',
@@ -30,10 +31,10 @@ def fetch_data_from_url(*args, **kwargs):
     url = kwargs["params"]["url"]                   # URL to fetch
     fname = kwargs["params"]["file_name"]           # File name 
     folder_name = kwargs["params"]["folder_name"]   # Destination folder name
-    file_prsence_check = default_args['file_prsence_check']
+    file_presence_check = default_args['file_presence_check']
     fpath = folder_name + '/' + fname
     
-    if file_prsence_check and os.path.exists(f'{fpath}'):
+    if file_presence_check and os.path.exists(f'{fpath}'):
         return logging.info(f'File named {fname} already present.')
     
     if not os.path.isdir(folder_name):
@@ -390,24 +391,16 @@ get_zip_table = PythonOperator(
     provide_context=True
 )
 
-house_price_table_validity_check = PythonOperator(
+house_price_table_validity_check = TableDataQualityOperator(
     task_id='house_price_table_validity_check',
     dag=dag,
-    python_callable=data_validity_check,
-    provide_context=True,
-    params={
-        "data_path": 'data/etl_data/zip_year_house_price_table/house_price_table/',
-    }
+    data_path = 'data/etl_data/zip_year_house_price_table/house_price_table/'
 )
 
-zipcode_table_validity_check = PythonOperator(
+zipcode_table_validity_check = TableDataQualityOperator(
     task_id='zipcode_table_validity_check',
     dag=dag,
-    python_callable=data_validity_check,
-    provide_context=True,
-    params={
-        "data_path": 'data/etl_data/zipcode_table/zipcode_table/',
-    }
+    data_path = 'data/etl_data/zipcode_table/zipcode_table/'
 )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
