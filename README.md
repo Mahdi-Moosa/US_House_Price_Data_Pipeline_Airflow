@@ -23,9 +23,16 @@ Housing and Urban Development](https://www.hud.gov/).*
 
 *Notes: At present, the airflow orchestration saves data in pre-specified local directories. This can easily be reconfigured to store data in Amazon S3 bucket and/or Amazon Redshfit. Please see: https://github.com/Mahdi-Moosa/US_Housing_Price_ETL*
 
-Files/ folders in this repo: 
+## Files/ folders in this repo: 
 * dags: folder contains .py script to run the Apache Airflow DAG.
 * docker-compose.yaml: docker-compose yaml file (for Apache Airflow; run in Windows 10 Pro, Docker Desktop). yaml file was modified to run in the aforementioned OS environment. 
+
+## Data pipeline features:
+* Reads downloaded files of a range of formats (e.g., csv, xlsx, tar.gz, zip and txt).
+* By default, gfle(s) are only downloaded if they are not present already. Default args can be modified to ignore and replace existing files (if preferred).
+* Performs ETL primarily using python pandas library.
+* Staging table(s) and final data table(s) for US house price datawarehouse are saved as parquet format.
+* DAG tasks are performed using PythonOperator(s). Data validation is done using a custom operator. 
 
 ## Graph view of the Airflow Tasks:
 
