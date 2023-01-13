@@ -33,7 +33,7 @@ Housing and Urban Development](https://www.hud.gov/).*
 * By default, file(s) are only downloaded if they are not present already. Default args can be modified to ignore and replace existing files (if preferred).
 * Performs ETL primarily using python pandas library.
 * Staging table(s) and final data table(s) for US house price datawarehouse are saved as parquet format.
-* DAG tasks are performed using PythonOperator(s). Data validation is done using a custom operator. 
+* DAG tasks are performed using PythonOperator(s). Data validation is done using a *custom* operator. 
 
 ## Graph view of the Airflow Tasks:
 
